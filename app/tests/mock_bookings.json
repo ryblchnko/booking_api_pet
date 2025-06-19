@@ -1,0 +1,10 @@
+{
+  "id": 3,
+  "room_id": 1,
+  "user_id": 3,
+  "date_to": "2023-06-20",
+  "date_from": "2023-05-15",
+  "price": 24500,
+  "total_cost": 882000,
+  "total_days": 36
+}
