@@ -1,34 +1,36 @@
 import datetime
 from datetime import date
 
-from fastapi import APIRouter, Depends, status, Query
+from fastapi import APIRouter, Depends, Query, status
+from fastapi_versioning import version
 
 from app.bookings.dao import BookingDAO
 from app.bookings.schemas import SBooking
-from app.exceptions import RoomCannotBeBookedException, InvalidDateRangeException
+from app.exceptions import InvalidDateRangeException, RoomCannotBeBookedException
 from app.tasks.tasks import send_booking_confirmation_email
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 
-router = APIRouter(
-    prefix='/bookings',
-    tags=['Бронирования']
-)
+router = APIRouter(prefix="/bookings", tags=["Бронирования"])
 
 
-@router.get('')
-async def get_bookings(
-        user: Users = Depends(get_current_user)
-) -> list[SBooking]:
+@router.get("")
+@version(1)
+async def get_bookings(user: Users = Depends(get_current_user)) -> list[SBooking]:
     return await BookingDAO.find_all(user_id=user.id)
 
 
-@router.post('')
+@router.post("")
+@version(1)
 async def add_booking(
-        room_id: int,
-        date_from: date = Query(..., description=f'Например {datetime.datetime.now().date()}'),
-        date_to: date = Query(..., description=f'Например {datetime.datetime.now().date()}'),
-        user: Users = Depends(get_current_user)
+    room_id: int,
+    date_from: date = Query(
+        ..., description=f"Например {datetime.datetime.now().date()}"
+    ),
+    date_to: date = Query(
+        ..., description=f"Например {datetime.datetime.now().date()}"
+    ),
+    user: Users = Depends(get_current_user),
 ):
     if date_from > date_to:
         raise InvalidDateRangeException
@@ -40,9 +42,9 @@ async def add_booking(
     return booking_dict
 
 
-@router.delete('/{booking_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{booking_id}", status_code=status.HTTP_204_NO_CONTENT)
+@version(1)
 async def delete_booking(
-        booking_id: int,
-        user: Users = Depends(get_current_user)
+    booking_id: int, user: Users = Depends(get_current_user)
 ) -> None:
     await BookingDAO.delete(id=booking_id)

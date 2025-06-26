@@ -7,11 +7,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 load_dotenv()
 # abs_path_env = os.path.abspath("../.env")
 
-secret_key = os.getenv('SECRET_KEY')
-algorithm = os.getenv('ALGORITHM')
+secret_key = os.getenv("SECRET_KEY")
+algorithm = os.getenv("ALGORITHM")
+
 
 class Settings(BaseSettings):
-    MODE: Literal['DEV', 'TEST', 'PROD']
+    MODE: Literal["DEV", "TEST", "PROD"]
+    LOG_LEVEL: str
 
     DB_HOST: str
     DB_PORT: int
@@ -36,7 +38,8 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
 
-    model_config = SettingsConfigDict(env_file='.env')
+    model_config = SettingsConfigDict(env_file=".env")
+
 
 settings = Settings()
 

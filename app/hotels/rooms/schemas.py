@@ -13,6 +13,7 @@ class SRoom(BaseModel):
     quantity: int
     image_id: Optional[int]
 
+
 class SRoomOut(SRoom):
-    total_cost: int
-    rooms_left: int | None
+    total_cost: int = None
+    rooms_left: int = None
